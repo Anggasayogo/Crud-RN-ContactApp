@@ -107,7 +107,3 @@ App
 | ![screenshots1](dist/photo6289792757190995418.jpg) | ![screenshots2](dist/photo6289792757190995421.jpg) | ![screenshots3](dist/photo6289792757190995422.jpg) | ![screenshots4](dist/photo6289792757190995420.jpg) |
 | ![screenshots5](dist/photo6289792757190995419.jpg) | ![screenshots6](dist/photo6289792757190995419.jpg) |  |  |
 |                                          |                                          |                                          |                                          |
-
-## Download Apk Release on folder
-```
-dist/apk/app-release.apk
