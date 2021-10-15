@@ -1,6 +1,6 @@
 export default {
   colors: {
-    primary: "#f9bc15",
+    primary: "#5077DF",
     "soft-secondary": "rgba(53, 73, 94, --osmi-opacity)"
   },
   spacing: {
@@ -11,15 +11,22 @@ export default {
       30: 120
     },
     radius: {
+      "solid": 30,
       "super-xl": 120
     }
   },
   font: {
     family: {
-      "font-regular": "OpenSans-Regular"
+      "regular": "DMSans-Regular",
+      "semiBold": "DMSans-SemiBold",
+      "italic": "DMSans-Italic",
+      "medium": "DMSans-Medium",
+      'bold': 'DMSans-Bold',
+      "extraBold": "DMSans-ExtraBold"
     },
     size: {
-      "xxl": 40
+      "big": 32,
+      "xxls": 42
     }
   }
 }
