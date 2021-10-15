@@ -17,7 +17,7 @@ const ContactList = props => {
         <Button onPress={() => showRemoveModal(item)}>
           <Image source={Images.icRemove} style={apply("w-24 h-24 mr-2")}/>
         </Button>
-        <Button onPress={showEditModal}>
+        <Button onPress={() => showEditModal(item)}>
           <Image source={Images.icPen} style={apply("w-24 h-24")}/>
         </Button>
       </View>

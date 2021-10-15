@@ -45,3 +45,16 @@ export function * deleteContact (api, action) {
     yield put(ContactActions.deleteContactFailure(response))
   }
 }
+
+export function * getDetailContact (api, action) {
+  const { data } = action
+
+  const response = yield call(api.getDetailContact, data?.data)
+
+  if (response.ok) {
+    yield put(ContactActions.getDetailContactSuccess(response.data))
+    data?.next()
+  } else {
+    yield put(ContactActions.getDetailContactFailure(response))
+  }
+}

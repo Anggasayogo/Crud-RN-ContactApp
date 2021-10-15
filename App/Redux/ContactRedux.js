@@ -13,6 +13,10 @@ const { Types, Creators } = createActions({
   deleteContactRequest: ['data'],
   deleteContactSuccess: ['data'],
   deleteContactFailure: ['error'],
+
+  getDetailContactRequest: ['data'],
+  getDetailContactSuccess: ['data'],
+  getDetailContactFailure: ['error'],
 })
 
 export const ContactTypes = Types
@@ -22,6 +26,7 @@ export const INITIAL_STATE = Immutable({
   contactModule: { data: [], fetching: false, error: null },
   createContact: { data: [], fetching: false, error: null },
   deleteContact: { data: [], fetching: false, error: null },
+  detailContact: { data: [], fetching: false, error: null },
 })
 
 export const ContactSelectors = {
@@ -49,6 +54,13 @@ export const deleteContactSuccess = (state, { data }) =>
 export const deleteContactFailure = (state, { error }) =>
   state.merge({ ...state, deleteContact: { ...state.deleteContact, fetching: false, error } })
 
+export const getDetailContactRequest = (state, { data }) =>
+  state.merge({ ...state, detailContact: { ...state.detailContact, fetching: true, error: null } })
+export const getDetailContactSuccess = (state, { data }) =>
+  state.merge({ ...state, detailContact: { ...state.detailContact, data, fetching: false, error: null } })
+export const getDetailContactFailure = (state, { error }) =>
+  state.merge({ ...state, detailContact: { ...state.detailContact, fetching: false, error } })
+
 
 export const reducer = createReducer(INITIAL_STATE, {
   [Types.GET_CONTACT_REQUEST]: getContactRequest,
@@ -62,4 +74,8 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.DELETE_CONTACT_REQUEST]: deleteContactRequest,
   [Types.DELETE_CONTACT_SUCCESS]: deleteContactSuccess,
   [Types.DELETE_CONTACT_FAILURE]: deleteContactFailure,
+
+  [Types.GET_DETAIL_CONTACT_REQUEST]: getDetailContactRequest,
+  [Types.GET_DETAIL_CONTACT_SUCCESS]: getDetailContactSuccess,
+  [Types.GET_DETAIL_CONTACT_FAILURE]: getDetailContactFailure,
 })

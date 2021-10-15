@@ -16,7 +16,7 @@ import styles from './Styles/LaunchScreenStyle'
 import { apply } from '../Themes/OsmiProvider'
 
 const LaunchScreen = props => {
-  const { contact, contactAdd, contactDeleted } = props
+  const { contact, contactAdd, contactDeleted, detailContact } = props
   const ModalRef = useRef()
   const RmvModalRef = useRef()
   const [edited, setEdited] = useState(false)
@@ -31,11 +31,17 @@ const LaunchScreen = props => {
   }
 
   const onAddContactTouched = () => {
-    ModalRef?.current?.showModal()
+    ModalRef?.current?.resetValues()
+    ModalRef?.current?.showModal('post')
   }
 
-  const onEditContactTouched = () => {
-    ModalRef?.current?.showModal()
+  const onEditContactTouched = (val) => {
+    props.getDetailContact({
+      data: val?.id,
+      next : () => {
+        ModalRef?.current?.showModal('put')
+      }
+    })
   }
 
   const onRemoveContactTouched = (val) => {
@@ -97,6 +103,7 @@ const LaunchScreen = props => {
         ref={ModalRef}
         onSubmitingContact={(val)=> addAnewContact(val)}
         postDispatching={contactAdd?.fetching}
+        defaultValue={detailContact}
       />
       <RemoveModal
         ref={RmvModalRef}
@@ -110,13 +117,15 @@ const LaunchScreen = props => {
 const mapStateToProps = state => ({
   contact: state.contact.contactModule,
   contactAdd: state.contact.createContact,
-  contactDeleted: state.contact.deleteContact
+  contactDeleted: state.contact.deleteContact,
+  detailContact: state.contact.detailContact
 })
 
 const mapDispatchToProps = dispatch => ({
   getContact: () => dispatch(ContactActions.getContactRequest()),
   postContact: (val) => dispatch(ContactActions.postContactRequest(val)),
-  deleteContact: (val) => dispatch(ContactActions.deleteContactRequest(val))
+  deleteContact: (val) => dispatch(ContactActions.deleteContactRequest(val)),
+  getDetailContact: (val) => dispatch(ContactActions.getDetailContactRequest(val))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(LaunchScreen)
