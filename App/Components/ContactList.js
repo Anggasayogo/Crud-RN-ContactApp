@@ -11,10 +11,10 @@ import Button from './Button'
 const ContactList = props => {
   const { item, isEdited, showEditModal, showRemoveModal } = props
 
-  const RenderAction = () => {
+  const RenderAction = (item) => {
     return (
       <View style={apply("row items-center")}>
-        <Button onPress={showRemoveModal}>
+        <Button onPress={() => showRemoveModal(item)}>
           <Image source={Images.icRemove} style={apply("w-24 h-24 mr-2")}/>
         </Button>
         <Button onPress={showEditModal}>
@@ -45,7 +45,7 @@ const ContactList = props => {
         </View>
         <View style={apply("items-center justify-center")}>
           {
-            isEdited ? <RenderAction/> : <RenderNext/>
+            isEdited ? RenderAction(props.item) : <RenderNext/>
           }
         </View>
       </View>

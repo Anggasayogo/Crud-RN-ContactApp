@@ -1,6 +1,6 @@
 import React, { useState, forwardRef, useImperativeHandle, memo } from 'react'
 import Modal from 'react-native-modal'
-import { View, Text, TextInput } from 'react-native'
+import { View, Text, TextInput, ActivityIndicator } from 'react-native'
 import Button from './Button'
 
 // Styles
@@ -8,6 +8,7 @@ import styles from './Styles/UserModalStyle'
 import { apply } from '../Themes/OsmiProvider'
 
 const UserModal =  forwardRef((props, ref) => {
+  const { onSubmitingContact, postDispatching } = props
   const [modalShow, setModalShow] = useState(false)
   const [firstname, setfirstname] = useState('')
   const [lastName, setlastName] = useState('')
@@ -20,12 +21,8 @@ const UserModal =  forwardRef((props, ref) => {
     },
     disableModal() {
       setModalShow(false)
-    }
+    },
   }))
-
-  const onSubmitingContact = () => {
-
-  }
 
   return (
     <Modal
@@ -69,10 +66,17 @@ const UserModal =  forwardRef((props, ref) => {
           placeholder="Image Url ex http://example.com/image.png"
         />
         <Button
-          onPress={onSubmitingContact}
+          onPress={() => onSubmitingContact({firstname,lastName,age,imageUrl})}
+          disabled={postDispatching}
           style={apply("bg-primary rounded rounded-lg my-2 h-50 items-center justify-center")}
         >
-          <Text style={apply("text-white font-medium text-md")}>Submit</Text>
+          {
+            postDispatching ? (
+              <ActivityIndicator size="small" color="white" />
+            ) : (
+              <Text style={apply("text-white font-medium text-md")}>Submit</Text>
+            )
+          }
         </Button>
       </View>
     </Modal>

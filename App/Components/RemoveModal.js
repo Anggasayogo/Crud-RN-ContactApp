@@ -1,6 +1,6 @@
 import React, { useState, forwardRef, useImperativeHandle, memo } from 'react'
 // import PropTypes from 'prop-types'
-import { View, Text } from 'react-native'
+import { View, Text, ActivityIndicator } from 'react-native'
 import Modal from 'react-native-modal'
 import Button from './Button'
 
@@ -9,6 +9,7 @@ import styles from './Styles/RemoveModalStyle'
 import { apply } from '../Themes/OsmiProvider'
 
 const RemoveModal = forwardRef((props, ref) => {
+  const { onRemove, deleteDispatching } = props
   const [modalShow, setModalShow] = useState(false)
 
   useImperativeHandle(ref, () => ({
@@ -35,8 +36,14 @@ const RemoveModal = forwardRef((props, ref) => {
             <Button onPress={()=> setModalShow(false)} style={apply("border border-primary rounded rounded-md mr-4")}>
               <Text style={apply("px-5 py-2 text-primary font-medium")}>Tidak</Text>
             </Button>
-            <Button style={apply("bg-primary rounded rounded-md")}>
-              <Text style={apply("px-5 py-2 text-white font-medium ")}>Ya</Text>
+            <Button disabled={deleteDispatching} onPress={onRemove} style={apply("bg-primary rounded rounded-md")}>
+              {
+                deleteDispatching ? (
+                  <ActivityIndicator size="small" color="white" style={apply("py-2 px-5")} />
+                ) : (
+                  <Text style={apply("px-5 py-2 text-white font-medium ")}>Ya</Text>
+                )
+              }
             </Button>
           </View>
         </View>

@@ -17,14 +17,31 @@ export function * getContact (api, action) {
 export function * postContact (api, action) {
   const { data } = action
 
-  const response = yield call(api.contact, data)
+  const response = yield call(api.postContact, data?.data)
 
   if (response.ok) {
     yield all([
-      ContactActions.postContactSuccess(response.data),
-      ContactActions.getContactRequest()
+      put(ContactActions.postContactSuccess(response.data)),
+      put(ContactActions.getContactRequest())
     ])
+    data?.next()
   } else {
     yield put(ContactActions.postContactFailure(response))
+  }
+}
+
+export function * deleteContact (api, action) {
+  const { data } = action
+
+  const response = yield call(api.deleteContact, data?.data)
+
+  if (response.ok) {
+    yield all([
+      put(ContactActions.deleteContactSuccess(response.data)),
+      put(ContactActions.getContactRequest())
+    ])
+    data?.next()
+  } else {
+    yield put(ContactActions.deleteContactFailure(response))
   }
 }

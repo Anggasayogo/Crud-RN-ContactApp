@@ -16,14 +16,14 @@ import styles from './Styles/LaunchScreenStyle'
 import { apply } from '../Themes/OsmiProvider'
 
 const LaunchScreen = props => {
-  const { contact } = props
+  const { contact, contactAdd, contactDeleted } = props
   const ModalRef = useRef()
   const RmvModalRef = useRef()
   const [edited, setEdited] = useState(false)
+  const [idContact, setIdContact] = useState(null)
 
   useEffect(()=>{
     props.getContact()
-    console.tron.log(contact)
   },[])
 
   const editedTouched = () => {
@@ -38,8 +38,32 @@ const LaunchScreen = props => {
     ModalRef?.current?.showModal()
   }
 
-  const onRemoveContactTouched = () => {
+  const onRemoveContactTouched = (val) => {
+    setIdContact(val?.id)
     RmvModalRef?.current?.showModal()
+  }
+
+  const onActionRemoveContct = () => {
+    props.deleteContact({
+      data : idContact,
+      next : () => {
+        RmvModalRef?.current?.disableModal()
+      }
+    })
+  }
+
+  const addAnewContact = (val) => {
+    props.postContact({
+      data : JSON.stringify({
+        firstName: val?.firstname,
+        lastName: val?.lastName,
+        age: val?.age,
+        photo: val?.imageUrl
+      }),
+      next : () => {
+        ModalRef?.current?.disableModal()
+      }
+    })
   }
 
   return (
@@ -59,6 +83,7 @@ const LaunchScreen = props => {
         <FlatList
           data={contact?.data?.data}
           keyExtractor={(_,index) => index.toString()}
+          showsVerticalScrollIndicator={false}
           renderItem={({item})=> 
             <ContactList 
             showEditModal={onEditContactTouched} 
@@ -70,20 +95,28 @@ const LaunchScreen = props => {
       </View>
       <UserModal
         ref={ModalRef}
+        onSubmitingContact={(val)=> addAnewContact(val)}
+        postDispatching={contactAdd?.fetching}
       />
       <RemoveModal
         ref={RmvModalRef}
+        onRemove={onActionRemoveContct}
+        deleteDispatching={contactDeleted?.fetching}
       />
     </SafeAreaView>
   )
 }
 
 const mapStateToProps = state => ({
-  contact: state.contact.contactModule
+  contact: state.contact.contactModule,
+  contactAdd: state.contact.createContact,
+  contactDeleted: state.contact.deleteContact
 })
 
 const mapDispatchToProps = dispatch => ({
-  getContact: () => dispatch(ContactActions.getContactRequest())
+  getContact: () => dispatch(ContactActions.getContactRequest()),
+  postContact: (val) => dispatch(ContactActions.postContactRequest(val)),
+  deleteContact: (val) => dispatch(ContactActions.deleteContactRequest(val))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(LaunchScreen)

@@ -12,7 +12,9 @@ import { ContactTypes } from '../Redux/ContactRedux'
 import { startup } from './StartupSagas'
 import { getRoot } from './StaticDataSagas'
 import {
-  getContact
+  getContact,
+  postContact,
+  deleteContact
 } from './ContactSagas'
 
 const api = DebugConfig.useFixtures ? FixtureAPI : API.create()
@@ -21,6 +23,8 @@ export default function * root () {
   yield all([
     takeLatest(StartupTypes.STARTUP, startup),
     takeLatest(ContactTypes.GET_CONTACT_REQUEST, getContact, api),
+    takeLatest(ContactTypes.POST_CONTACT_REQUEST, postContact, api),
+    takeLatest(ContactTypes.DELETE_CONTACT_REQUEST, deleteContact, api),
     takeLatest(StaticDataTypes.GET_ROOT_REQUEST, getRoot, api)
   ])
 }
