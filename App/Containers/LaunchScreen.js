@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { connect } from 'react-redux'
 import { StatusBar, Image, View, Text, FlatList } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -7,6 +7,8 @@ import Images from '../Images'
 
 // Components
 import Button from '../Components/Button'
+import UserModal from '../Components/UserModal'
+import RemoveModal from '../Components/RemoveModal'
 import ContactList from '../Components/ContactList'
 
 // Styles
@@ -15,6 +17,8 @@ import { apply } from '../Themes/OsmiProvider'
 
 const LaunchScreen = props => {
   const { contact } = props
+  const ModalRef = useRef()
+  const RmvModalRef = useRef()
   const [edited, setEdited] = useState(false)
 
   useEffect(()=>{
@@ -26,13 +30,25 @@ const LaunchScreen = props => {
     setEdited(!edited)
   }
 
+  const onAddContactTouched = () => {
+    ModalRef?.current?.showModal()
+  }
+
+  const onEditContactTouched = () => {
+    ModalRef?.current?.showModal()
+  }
+
+  const onRemoveContactTouched = () => {
+    RmvModalRef?.current?.showModal()
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle='light-content' backgroundColor={apply('primary')} />
       <View style={apply("row items-center px-5 py-10")}>
         <Image source={Images.icUserGroup} style={apply("w-35 h-35 mr-2")}/>
         <Text style={apply("text-white font-medium text-3xl flex")}>My Contact</Text>
-        <Button>
+        <Button onPress={onAddContactTouched}>
           <Image source={Images.icPlus } style={apply("w-35 h-35")}/>
         </Button>
         <Button onPress={editedTouched}>
@@ -43,9 +59,21 @@ const LaunchScreen = props => {
         <FlatList
           data={contact?.data?.data}
           keyExtractor={(_,index) => index.toString()}
-          renderItem={({item})=> <ContactList isEdited={edited} item={item} />}
+          renderItem={({item})=> 
+            <ContactList 
+            showEditModal={onEditContactTouched} 
+            showRemoveModal={onRemoveContactTouched}
+            isEdited={edited} 
+            item={item} 
+          />}
         />
       </View>
+      <UserModal
+        ref={ModalRef}
+      />
+      <RemoveModal
+        ref={RmvModalRef}
+      />
     </SafeAreaView>
   )
 }

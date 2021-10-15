@@ -6,15 +6,20 @@ import Images from '../Images'
 // Styles
 import styles from './Styles/ContactListStyle'
 import { apply } from '../Themes/OsmiProvider'
+import Button from './Button'
 
 const ContactList = props => {
-  const { item, isEdited } = props
+  const { item, isEdited, showEditModal, showRemoveModal } = props
 
   const RenderAction = () => {
     return (
       <View style={apply("row items-center")}>
-        <Image source={Images.icRemove} style={apply("w-24 h-24 mr-2")}/>
-        <Image source={Images.icPen} style={apply("w-24 h-24")}/>
+        <Button onPress={showRemoveModal}>
+          <Image source={Images.icRemove} style={apply("w-24 h-24 mr-2")}/>
+        </Button>
+        <Button onPress={showEditModal}>
+          <Image source={Images.icPen} style={apply("w-24 h-24")}/>
+        </Button>
       </View>
   )}
 
@@ -29,7 +34,7 @@ const ContactList = props => {
     <View style={styles.container}>
       <View style={apply("row items-cener")}>
         {
-          item.photo === 'N/A' ?(
+          !item.photo?.includes('http://') ?(
             <Image source={Images.icUserDefault} style={apply("w-60 h-60 rounded-full")}/>
           ): (
           <Image source={{ uri: item.photo }} style={apply("w-60 h-60 rounded-full")}/>)

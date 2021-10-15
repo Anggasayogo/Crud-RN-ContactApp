@@ -17,10 +17,10 @@ const create = (baseURL = 'https://simple-contact-crud.herokuapp.com/') => {
   const getRate = () => api.get('rate_limit')
   const getUser = (username) => api.get('search/users', {q: username})
   // cntact
-  const getMyContact = () => api.get('contact')
+  const contact = () => api.get('contact')
 
   return {
-    getMyContact,
+    contact,
     getRoot,
     getRate,
     getUser,

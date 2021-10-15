@@ -11,6 +11,7 @@ export default {
       30: 120
     },
     radius: {
+      "match": 20,
       "solid": 30,
       "super-xl": 120
     }
