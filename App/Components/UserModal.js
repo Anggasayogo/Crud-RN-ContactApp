@@ -8,7 +8,8 @@ import styles from './Styles/UserModalStyle'
 import { apply } from '../Themes/OsmiProvider'
 
 const UserModal =  forwardRef((props, ref) => {
-  const { onSubmitingContact, postDispatching, defaultValue } = props
+  const { onSubmitingContact, postDispatching, defaultValue, onUpdatingContact } = props
+  const [stateCode, setStateCode] = useState('post')
   const [modalShow, setModalShow] = useState(false)
   const [firstname, setfirstname] = useState('')
   const [lastName, setlastName] = useState('')
@@ -24,6 +25,7 @@ const UserModal =  forwardRef((props, ref) => {
 
   useImperativeHandle(ref, () => ({
     showModal(param) {
+      setStateCode(param)
       if(param === 'put'){
         setfirstname(defaultValue?.data?.data?.firstName)
         setlastName(defaultValue?.data?.data?.lastName)
@@ -40,6 +42,12 @@ const UserModal =  forwardRef((props, ref) => {
       resetValue()
     } 
   }))
+
+  const handleActionBtn = () => {
+    const id = defaultValue?.data?.data?.id
+    stateCode === 'put' ? onUpdatingContact({firstname,lastName,age,imageUrl, id}) :
+            onSubmitingContact({firstname,lastName,age,imageUrl})
+  }
 
   return (
     <Modal
@@ -86,7 +94,7 @@ const UserModal =  forwardRef((props, ref) => {
           placeholder="Image Url ex http://example.com/image.png"
         />
         <Button
-          onPress={() => onSubmitingContact({firstname,lastName,age,imageUrl})}
+          onPress={handleActionBtn}
           disabled={postDispatching}
           style={apply("bg-primary rounded rounded-lg my-2 h-50 items-center justify-center")}
         >

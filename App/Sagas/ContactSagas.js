@@ -58,3 +58,19 @@ export function * getDetailContact (api, action) {
     yield put(ContactActions.getDetailContactFailure(response))
   }
 }
+
+export function * updateDetailContact (api, action) {
+  const { data } = action
+
+  const response = yield call(api.updateContact, data)
+
+  if (response.ok) {
+    yield all([
+      put(ContactActions.getDetailContactSuccess(response.data)),
+      put(ContactActions.getContactRequest())
+    ])
+    data?.next()
+  } else {
+    yield put(ContactActions.getDetailContactFailure(response))
+  }
+}

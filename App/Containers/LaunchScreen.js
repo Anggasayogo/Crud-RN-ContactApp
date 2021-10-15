@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { connect } from 'react-redux'
-import { StatusBar, Image, View, Text, FlatList } from 'react-native'
+import { StatusBar, Image, View, Text, FlatList, RefreshControl } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import ContactActions from '../Redux/ContactRedux'
 import Images from '../Images'
@@ -19,6 +19,7 @@ const LaunchScreen = props => {
   const { contact, contactAdd, contactDeleted, detailContact } = props
   const ModalRef = useRef()
   const RmvModalRef = useRef()
+  const [refresh, setRefreshing] = useState(false)
   const [edited, setEdited] = useState(false)
   const [idContact, setIdContact] = useState(null)
 
@@ -72,6 +73,27 @@ const LaunchScreen = props => {
     })
   }
 
+  const updateNewContact = (val) => {
+    props.updateContact({
+      data : JSON.stringify({
+        firstName: val?.firstname,
+        lastName: val?.lastName,
+        age: val?.age,
+        photo: val?.imageUrl
+      }),
+      param: val?.id,
+      next : () => {
+        ModalRef?.current?.disableModal()
+      }
+    })
+  } 
+
+  const onRefressh = () => {
+    setRefreshing(true)
+    props.getContact()
+    setRefreshing(false)
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle='light-content' backgroundColor={apply('primary')} />
@@ -86,22 +108,30 @@ const LaunchScreen = props => {
         </Button>
       </View>
       <View style={apply("flex bg-white rounded-t-solid p-5")}>
-        <FlatList
-          data={contact?.data?.data}
-          keyExtractor={(_,index) => index.toString()}
-          showsVerticalScrollIndicator={false}
-          renderItem={({item})=> 
-            <ContactList 
-            showEditModal={onEditContactTouched} 
-            showRemoveModal={onRemoveContactTouched}
-            isEdited={edited} 
-            item={item} 
-          />}
-        />
+        {
+          contact?.fetching ? (
+            <Text style={apply("text-lg font-medium text-center my-4")}>Loading...</Text>
+          ) : (
+            <FlatList
+              data={contact?.data?.data}
+              keyExtractor={(_,index) => index.toString()}
+              showsVerticalScrollIndicator={false}
+              refreshControl={<RefreshControl refreshing={refresh} onRefresh={onRefressh}/>}
+              renderItem={({item})=> 
+                <ContactList 
+                showEditModal={onEditContactTouched} 
+                showRemoveModal={onRemoveContactTouched}
+                isEdited={edited} 
+                item={item} 
+              />}
+            />
+          )
+        }
       </View>
       <UserModal
         ref={ModalRef}
         onSubmitingContact={(val)=> addAnewContact(val)}
+        onUpdatingContact={(val)=> updateNewContact(val)}
         postDispatching={contactAdd?.fetching}
         defaultValue={detailContact}
       />
@@ -125,7 +155,8 @@ const mapDispatchToProps = dispatch => ({
   getContact: () => dispatch(ContactActions.getContactRequest()),
   postContact: (val) => dispatch(ContactActions.postContactRequest(val)),
   deleteContact: (val) => dispatch(ContactActions.deleteContactRequest(val)),
-  getDetailContact: (val) => dispatch(ContactActions.getDetailContactRequest(val))
+  getDetailContact: (val) => dispatch(ContactActions.getDetailContactRequest(val)),
+  updateContact: (val) => dispatch(ContactActions.updateContactRequest(val)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(LaunchScreen)

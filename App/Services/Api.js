@@ -21,6 +21,7 @@ const create = (baseURL = 'https://simple-contact-crud.herokuapp.com/') => {
   const postContact = (data) => api.post('contact',data)
   const deleteContact = (param) => api.delete(`contact/${param}`)
   const getDetailContact = (param) => api.get(`contact/${param}`)
+  const updateContact = (data) => api.put(`contact/${data?.param}`, data?.data)
 
   return {
     contact,
@@ -29,6 +30,7 @@ const create = (baseURL = 'https://simple-contact-crud.herokuapp.com/') => {
     getUser,
     postContact,
     getDetailContact,
+    updateContact,
     deleteContact,
 
     api
