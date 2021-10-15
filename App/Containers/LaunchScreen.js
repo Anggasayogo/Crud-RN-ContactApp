@@ -16,7 +16,7 @@ import styles from './Styles/LaunchScreenStyle'
 import { apply } from '../Themes/OsmiProvider'
 
 const LaunchScreen = props => {
-  const { contact, contactAdd, contactDeleted, detailContact } = props
+  const { contact, contactAdd, contactDeleted, detailContact, updateContacts } = props
   const ModalRef = useRef()
   const RmvModalRef = useRef()
   const [refresh, setRefreshing] = useState(false)
@@ -133,6 +133,7 @@ const LaunchScreen = props => {
         onSubmitingContact={(val)=> addAnewContact(val)}
         onUpdatingContact={(val)=> updateNewContact(val)}
         postDispatching={contactAdd?.fetching}
+        updateDispatching={updateContacts?.fetching}
         defaultValue={detailContact}
       />
       <RemoveModal
@@ -148,7 +149,8 @@ const mapStateToProps = state => ({
   contact: state.contact.contactModule,
   contactAdd: state.contact.createContact,
   contactDeleted: state.contact.deleteContact,
-  detailContact: state.contact.detailContact
+  detailContact: state.contact.detailContact,
+  updateContacts: state.contact.updateContact
 })
 
 const mapDispatchToProps = dispatch => ({

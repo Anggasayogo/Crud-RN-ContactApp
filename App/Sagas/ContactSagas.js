@@ -66,11 +66,11 @@ export function * updateDetailContact (api, action) {
 
   if (response.ok) {
     yield all([
-      put(ContactActions.getDetailContactSuccess(response.data)),
+      put(ContactActions.updateContactSuccess(response.data)),
       put(ContactActions.getContactRequest())
     ])
     data?.next()
   } else {
-    yield put(ContactActions.getDetailContactFailure(response))
+    yield put(ContactActions.updateContactFailure(response))
   }
 }

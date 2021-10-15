@@ -8,7 +8,7 @@ import styles from './Styles/UserModalStyle'
 import { apply } from '../Themes/OsmiProvider'
 
 const UserModal =  forwardRef((props, ref) => {
-  const { onSubmitingContact, postDispatching, defaultValue, onUpdatingContact } = props
+  const { onSubmitingContact, postDispatching, updateDispatching, defaultValue, onUpdatingContact } = props
   const [stateCode, setStateCode] = useState('post')
   const [modalShow, setModalShow] = useState(false)
   const [firstname, setfirstname] = useState('')
@@ -22,6 +22,8 @@ const UserModal =  forwardRef((props, ref) => {
     setage('')
     setimageUrl('')
   }
+
+  console.tron.log(stateCode === 'put' ? updateDispatching : postDispatching)
 
   useImperativeHandle(ref, () => ({
     showModal(param) {
@@ -95,11 +97,11 @@ const UserModal =  forwardRef((props, ref) => {
         />
         <Button
           onPress={handleActionBtn}
-          disabled={postDispatching}
+          disabled={stateCode === 'put' ? updateDispatching : postDispatching}
           style={apply("bg-primary rounded rounded-lg my-2 h-50 items-center justify-center")}
         >
           {
-            postDispatching ? (
+            (stateCode === 'put' ? updateDispatching : postDispatching) ? (
               <ActivityIndicator size="small" color="white" />
             ) : (
               <Text style={apply("text-white font-medium text-md")}>Submit</Text>
