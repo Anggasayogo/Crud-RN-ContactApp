@@ -23,8 +23,6 @@ const UserModal =  forwardRef((props, ref) => {
     setimageUrl('')
   }
 
-  console.tron.log(stateCode === 'put' ? updateDispatching : postDispatching)
-
   useImperativeHandle(ref, () => ({
     showModal(param) {
       setStateCode(param)
